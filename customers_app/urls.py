@@ -5,5 +5,6 @@ from customers_app.apps import CustomersAppConfig
 app_name = CustomersAppConfig.name
 
 urlpatterns = [
-    # path('', ..., name=''),
+    # path('list', ..., name='list'),
+    # path('customer/<int:pk>', ..., name='customer'),
 ]

@@ -12,7 +12,7 @@ class Customer(models.Model):
     surname = models.CharField(**NULLABLE, max_length=150, verbose_name='отчество')
     email = models.EmailField(max_length=100, verbose_name='email')
     comment = models.TextField(**NULLABLE, verbose_name='комментарий')
-    subscriptions = models.ManyToManyField(Mailing, verbose_name='подписки')
+    subscriptions = models.ManyToManyField(Mailing, **NULLABLE, verbose_name='подписки')
 
     def __str__(self):
         return f'{self.last_name} {self.first_name} {self.surname}'
