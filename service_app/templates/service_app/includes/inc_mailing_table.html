@@ -2,34 +2,38 @@
     <thead>
     <tr>
         <th scope="col">ID</th>
-        <th scope="col">Дата создания</th>
-        <th scope="col">Запись</th>
-        <th scope="col">Публикация</th>
+        <th scope="col">Название рассылки</th>
+        <th scope="col">Тема</th>
+        <th scope="col">Периодичность</th>
+        <th scope="col">Время рассылки</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Управление</th>
     </tr>
     </thead>
     <tbody>
     {% for object in object_list %}
-        <tr {% if object.is_published %}
+        <tr {% if object.is_active %}
             class="table-success"
         {% else %}
             class="table-secondary"
         {% endif %}>
             <th scope="row">{{ object.pk }}</th>
-            <td>{{ object.created_at }}</td>
-            <td>
-{#                <a href="{% url 'blog:post' object.pk %}">#}
-{#                    {{ object.title|truncatechars:40 }}#}
-{#                </a>#}
-            </td>
+            <td>{{ object.name }}</td>
+            <td>{{ object.title|truncatechars:25 }}</td>
+            <td>{{ object.periodicity }}</td>
+            <td>{{ object.mailing_time }}</td>
+            <td>{{ object.status }}</td>
             <td>
                 <div>
-{#                    {% if object.is_published %}#}
-{#                        <a class="btn btn-success form-control"#}
-{#                           href="{% url 'blog:published' object.pk %}">Снять с публикации</a>#}
-{#                    {% else %}#}
-{#                        <a class="btn btn-secondary form-control"#}
-{#                           href="{% url 'blog:published' object.pk %}">Опубликовать</a>#}
-{#                    {% endif %}#}
+                    {% if object.is_active %}
+                        <a class="btn btn-success"
+                           href="#">Отключить</a>
+                    {% else %}
+                        <a class="btn btn-secondary"
+                           href="#">Включить</a>
+                    {% endif %}
+                    <a class="btn btn-outline-primary"
+                       href="#">изменить</a>
                 </div>
             </td>
         </tr>

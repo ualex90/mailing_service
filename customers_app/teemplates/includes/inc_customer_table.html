@@ -1,0 +1,37 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Дата создания</th>
+        <th scope="col">Запись</th>
+        <th scope="col">Публикация</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+        <tr {% if object.is_published %}
+            class="table-success"
+        {% else %}
+            class="table-secondary"
+        {% endif %}>
+            <th scope="row">{{ object.pk }}</th>
+            <td>{{ object.created_at }}</td>
+            <td>
+{#                <a href="{% url 'blog:post' object.pk %}">#}
+{#                    {{ object.title|truncatechars:40 }}#}
+{#                </a>#}
+            </td>
+            <td>
+                <div>
+{#                    {% if object.is_published %}#}
+{#                        <a class="btn btn-success form-control"#}
+{#                           href="{% url 'blog:published' object.pk %}">Снять с публикации</a>#}
+{#                    {% else %}#}
+{#                        <a class="btn btn-secondary form-control"#}
+{#                           href="{% url 'blog:published' object.pk %}">Опубликовать</a>#}
+{#                    {% endif %}#}
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
