@@ -7,5 +7,4 @@ app_name = ServiceAppConfig.name
 
 urlpatterns = [
     # path('mailing/list/', ..., name='list'),
-    # path('mailing/<int:pk>/', ..., name='mailing'),
 ]
