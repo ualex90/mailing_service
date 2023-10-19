@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from service_app.models import Mailing
 
@@ -34,6 +34,20 @@ class MailingUpdateView(UpdateView):
         'title': 'Рассылки',
         'description': 'Изменение рассылки',
     }
+
+
+class MailingDeleteView(DeleteView):
+    model = Mailing
+    success_url = reverse_lazy('customers_app:list')
+    extra_context = {
+        'description': 'Удаление рассылки',
+    }
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        item = Mailing.objects.get(pk=self.kwargs.get('pk'))
+        context_data['title'] = item.name
+        return context_data
 
 
 def toggle_activity(request, pk):
