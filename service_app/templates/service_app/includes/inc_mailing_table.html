@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-secondary">
     <thead>
     <tr>
         <th scope="col">ID</th>
@@ -34,6 +34,8 @@
                     {% endif %}
                     <a class="btn btn-outline-primary"
                        href="{% url 'service_app:update' object.pk %}">изменить</a>
+                    <a class="btn btn-outline-danger"
+                       href="{% url 'service_app:delete' object.pk %}">удалить</a>
                 </div>
             </td>
         </tr>
