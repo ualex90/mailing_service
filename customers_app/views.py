@@ -58,11 +58,11 @@ class CustomerDeleteView(DeleteView):
     model = Customer
     success_url = reverse_lazy('customers_app:list')
     extra_context = {
-        'description': 'Удаление пользователя',
+        'description': 'Удаление клиента',
     }
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        post_item = Customer.objects.get(pk=self.kwargs.get('pk'))
-        context_data['title'] = f'{post_item.last_name}, {post_item.first_name}, {post_item.surname}'
+        item = Customer.objects.get(pk=self.kwargs.get('pk'))
+        context_data['title'] = f'{item.last_name}, {item.first_name}, {item.surname}'
         return context_data
