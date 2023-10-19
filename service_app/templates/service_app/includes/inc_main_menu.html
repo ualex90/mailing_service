@@ -1,11 +1,11 @@
 <div class="col-10"></div>
 <div class="col-2 mt-3 text-white">
     <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
-       href="#">Категории</a>
+       href="{% url 'service_app:index' %}">Список рассылок</a>
     <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
-       href="#">Блог</a>
+       href="{% url 'customers_app:list' %}">Пользователи</a>
     <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
-       href="#">Контакты</a>
+       href="#">Логи</a>
     <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
        href="/admin/">Администрирование</a>
 </div>

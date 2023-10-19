@@ -27,13 +27,13 @@
                 <div>
                     {% if object.is_active %}
                         <a class="btn btn-success"
-                           href="#">Отключить</a>
+                           href="{% url 'service_app:toggle_activity' object.pk %}">Отключить</a>
                     {% else %}
                         <a class="btn btn-secondary"
-                           href="#">Включить</a>
+                           href="{% url 'service_app:toggle_activity' object.pk %}">Включить</a>
                     {% endif %}
                     <a class="btn btn-outline-primary"
-                       href="#">изменить</a>
+                       href="{% url 'service_app:update' object.pk %}">изменить</a>
                 </div>
             </td>
         </tr>

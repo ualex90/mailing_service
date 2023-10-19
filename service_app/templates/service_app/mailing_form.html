@@ -1,0 +1,15 @@
+{% extends 'service_app/base.html' %}
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">
+            {% if object %}
+                Изменить
+            {% else %}
+                Создать
+            {% endif %}
+        </button>
+        <input type="button" class="btn btn-secondary" onclick="history.back()" value="Отмена"/>
+    </form>
+{% endblock %}

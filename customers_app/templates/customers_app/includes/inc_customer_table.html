@@ -1,0 +1,32 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Имя</th>
+        <th scope="col">email</th>
+        <th scope="col">Изменить</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+        <tr {% if object.is_published %}
+            class="table-success"
+        {% else %}
+            class="table-secondary"
+        {% endif %}>
+            <th scope="row">{{ object.pk }}</th>
+            <td>
+                <a href="{% url 'customers_app:customer' object.pk %}">
+                    {{ object.last_name }} {{ object.first_name }} {{ object.surname }}
+                </a>
+            </td>
+            <td>{{ object.email }}</td>
+            <td>
+                <div>
+                    <a class="btn btn-outline-primary"
+                       href="{% url 'customers_app:update' object.pk %}">изменить</a>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
