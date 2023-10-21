@@ -12,7 +12,7 @@ class Periodicity(models.Model):
 
     class Meta:
         verbose_name = 'периодичность'
-        verbose_name_plural = 'периодичности'
+        verbose_name_plural = 'периодичность'
 
 
 class Mailing(models.Model):
