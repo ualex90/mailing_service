@@ -3,9 +3,10 @@
     <tr>
         <th scope="col">ID</th>
         <th scope="col">Название рассылки</th>
-        <th scope="col">Тема</th>
         <th scope="col">Периодичность</th>
+        <th scope="col">Тема</th>
         <th scope="col">Время рассылки</th>
+        <th scope="col">Последняя</th>
         <th scope="col">Статус</th>
         <th scope="col">Управление</th>
     </tr>
@@ -19,20 +20,25 @@
         {% endif %}>
             <th scope="row">{{ object.pk }}</th>
             <td>{{ object.name }}</td>
-            <td>{{ object.title|truncatechars:25 }}</td>
             <td>{{ object.periodicity }}</td>
-            <td>{{ object.mailing_time }}</td>
-            <td>{{ object.status }}</td>
+            <td>{{ object.title|truncatechars:25 }}</td>
+            <td>{{ object.start_time }}</td>
+            <td>{{ object.sending_time }}</td>
+            <td>
+                <a href="{% url 'logger_app:mailing_log' object.pk %}">
+                    {{ object.status }}
+                </a>
+            </td>
             <td>
                 <div>
                     <a class="btn btn-primary"
                        href="{% url 'service_app:start_mailing' object.pk %}">Go</a>
                     {% if object.is_active %}
                         <a class="btn btn-success"
-                           href="{% url 'service_app:toggle_activity' object.pk %}">Отключить</a>
+                           href="{% url 'service_app:toggle_activity' object.pk %}">Остановить</a>
                     {% else %}
                         <a class="btn btn-secondary"
-                           href="{% url 'service_app:toggle_activity' object.pk %}">Включить</a>
+                           href="{% url 'service_app:toggle_activity' object.pk %}">Запустить</a>
                     {% endif %}
                     <a class="btn btn-outline-primary"
                        href="{% url 'service_app:update' object.pk %}">изменить</a>
