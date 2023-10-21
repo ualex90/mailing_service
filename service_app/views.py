@@ -3,6 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from service_app.models import Mailing
+from service_app.services import send_mailing
 
 
 class MailingListView(ListView):
@@ -45,8 +46,7 @@ class MailingDeleteView(DeleteView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        item = Mailing.objects.get(pk=self.kwargs.get('pk'))
-        context_data['title'] = item.name
+        context_data['title'] = get_object_or_404(Mailing, pk=self.kwargs.get('pk'))
         return context_data
 
 
@@ -59,4 +59,9 @@ def toggle_activity(request, pk):
 
     item.save()
 
+    return redirect(reverse('service_app:index'))
+
+
+def start_mailing(request, pk):
+    send_mailing(pk)
     return redirect(reverse('service_app:index'))
