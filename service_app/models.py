@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
@@ -6,6 +7,9 @@ NULLABLE = {'blank': True, 'null': True}
 
 class Periodicity(models.Model):
     name = models.CharField(max_length=10, verbose_name='периодичность')
+    minutes = models.IntegerField(default=0, validators=[MaxValueValidator(60)], verbose_name='минуты')
+    hours = models.IntegerField(default=0, validators=[MaxValueValidator(24)], verbose_name='часы')
+    days = models.IntegerField(default=7, validators=[MaxValueValidator(360)], verbose_name='дни')
 
     def __str__(self):
         return self.name
@@ -20,8 +24,10 @@ class Mailing(models.Model):
     title = models.CharField(max_length=100, verbose_name='тема письма')
     body = models.TextField(verbose_name='тело письма')
     periodicity = models.ForeignKey(Periodicity, on_delete=models.CASCADE, verbose_name='периодичность')
-    mailing_time = models.TimeField(verbose_name='время рассылки')
-    status = models.CharField(**NULLABLE, max_length=10, verbose_name='статус')  # completed, created, launched
+    start_time = models.TimeField(default='00:00:00', verbose_name='время начала')  # время старта
+    stop_time = models.TimeField(default='00:10:00', verbose_name='длительность')  # Продолжительность выполнения попыток
+    sending_time = models.DateTimeField(**NULLABLE, verbose_name='время успешной отправки')
+    status = models.CharField(default='создана', max_length=10, verbose_name='статус')  # completed, created, launched
     is_active = models.BooleanField(default=True, verbose_name='включить')
 
     def __str__(self):

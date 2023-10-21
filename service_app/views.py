@@ -20,7 +20,7 @@ class MailingListView(ListView):
 class MailingCreateView(CreateView):
     model = Mailing
     success_url = reverse_lazy('service_app:index')
-    fields = ['name', 'title', 'body', 'periodicity', 'mailing_time', 'status', 'is_active',]
+    fields = ['name', 'title', 'body', 'periodicity', 'start_time', 'stop_time', 'status', 'is_active',]
     extra_context = {
         'title': 'Рассылки',
         'description': 'Создание новой рассылки',
@@ -29,7 +29,7 @@ class MailingCreateView(CreateView):
 
 class MailingUpdateView(UpdateView):
     model = Mailing
-    fields = ['name', 'title', 'body', 'periodicity', 'mailing_time', 'status', 'is_active', ]
+    fields = ['name', 'title', 'body', 'periodicity', 'start_time', 'stop_time', 'status', 'is_active', ]
     success_url = reverse_lazy('service_app:index')
     extra_context = {
         'title': 'Рассылки',

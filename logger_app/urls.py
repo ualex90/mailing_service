@@ -1,10 +1,11 @@
 from django.urls import path
 
-from service_app.apps import ServiceAppConfig
+from logger_app.apps import LoggerAppConfig
+from logger_app.views import MailingLogListView, MailingLogView
 
-
-app_name = ServiceAppConfig.name
+app_name = LoggerAppConfig.name
 
 urlpatterns = [
-    # path('mailing/list/', ..., name='list'),
+    path('mailing/', MailingLogListView.as_view(), name='log'),
+    path('mailing/<int:pk>', MailingLogView.as_view(), name='mailing_log'),
 ]

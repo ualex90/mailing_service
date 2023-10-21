@@ -10,4 +10,4 @@ class PeriodicityAdmin(admin.ModelAdmin):
 
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ('name', 'title', 'periodicity', 'mailing_time', 'status')
+    list_display = ('name', 'periodicity', 'title', 'start_time', 'stop_time', 'sending_time', 'status')
