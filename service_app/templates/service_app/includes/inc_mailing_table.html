@@ -25,6 +25,8 @@
             <td>{{ object.status }}</td>
             <td>
                 <div>
+                    <a class="btn btn-primary"
+                       href="{% url 'service_app:start_mailing' object.pk %}">Go</a>
                     {% if object.is_active %}
                         <a class="btn btn-success"
                            href="{% url 'service_app:toggle_activity' object.pk %}">Отключить</a>

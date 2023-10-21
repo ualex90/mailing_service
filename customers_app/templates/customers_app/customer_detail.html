@@ -2,8 +2,8 @@
 {% block content %}
     <div>
         <a href="{% url 'customers_app:list' %}" type="button" class="btn btn-secondary">
-        << Назад
-    </a>
+            << Назад
+        </a>
     </div>
     <div class="row mt-5">
         <h4>{{ object.last_name }} {{ object.first_name }} {{ object.surname }}</h4>
@@ -11,9 +11,13 @@
     <div>
         <p><b>Электронная почта:</b> {{ object.email }}</p>
         <p><b>Подписки:</b></p>
-        {% for subscription in object.subscriptions.all %}
-            <p>{{ subscription }}</p>
-        {% endfor %}
+        {% if object.is_mailing %}
+            {% for subscription in object.subscriptions.all %}
+                <p>{{ subscription }}</p>
+            {% endfor %}
+        {% else %}
+            <p>Подписки отключены</p>
+        {% endif %}
         <p><b>Дополнительные сведения:</b> {{ object.comment }}</p>
     </div>
 {% endblock %}
