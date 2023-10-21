@@ -1,4 +1,5 @@
 import smtplib
+from datetime import datetime
 
 from django.core.mail import send_mass_mail
 
@@ -12,6 +13,7 @@ from service_app.models import Mailing
 def send_mailing(pk: int) -> None:
     """отправка сообщений подписанным на рассылку пользователям"""
     attempt_status = 'Ошибка'
+    is_successfully = False
     server_response = str()
 
     # формирование сообщений
@@ -28,13 +30,14 @@ def send_mailing(pk: int) -> None:
     except OSError:
         server_response = f'Хост ({EMAIL_HOST}) недоступен'
     else:
-        attempt_status = 'Успешно'
-
+        is_successfully = True
+        mailing.sending_time = datetime.now()
+        mailing.save()
     # Запись лога
     MailingLog.objects.create(
         mailing=mailing,
-        attempt_status=attempt_status,
-        server_response=server_response
+        server_response=server_response,
+        is_successfully=is_successfully,
     )
 
 
