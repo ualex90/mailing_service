@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from service_app.models import Mailing
+from service_app.models import Mailing, Message
 from service_app.services import send_mailing
 
 
@@ -17,6 +17,16 @@ class MailingListView(ListView):
     }
 
 
+class MessageListView(ListView):
+    model = Message
+    queryset = Message.objects.filter().order_by('pk').reverse()
+
+    extra_context = {
+        'title': 'Сообщения',
+        'description': 'Список сообщений',
+    }
+
+
 class MailingCreateView(CreateView):
     model = Mailing
     success_url = reverse_lazy('service_app:index')
@@ -24,6 +34,16 @@ class MailingCreateView(CreateView):
     extra_context = {
         'title': 'Рассылки',
         'description': 'Создание новой рассылки',
+    }
+
+
+class MessageCreateView(CreateView):
+    model = Message
+    success_url = reverse_lazy('service_app:message_list')
+    fields = ['title', 'body',]
+    extra_context = {
+        'title': 'Сообщение',
+        'description': 'Создание нового сообщения',
     }
 
 
@@ -37,9 +57,18 @@ class MailingUpdateView(UpdateView):
     }
 
     def post(self, request, *args, **kwargs):
-        Mailing.objects.update(status=Mailing.CREATED)
-        print(request.POST)
+        pass
         return super().post(request, *args, **kwargs)
+
+
+class MessageUpdateView(UpdateView):
+    model = Message
+    success_url = reverse_lazy('service_app:message_list')
+    fields = ['title', 'body',]
+    extra_context = {
+        'title': 'Сообщение',
+        'description': 'Изменение сообщения',
+    }
 
 
 class MailingDeleteView(DeleteView):
@@ -52,6 +81,19 @@ class MailingDeleteView(DeleteView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = get_object_or_404(Mailing, pk=self.kwargs.get('pk'))
+        return context_data
+
+
+class MessageDeleteView(DeleteView):
+    model = Message
+    success_url = reverse_lazy('service_app:message_list')
+    extra_context = {
+        'description': 'Удаление сообщения',
+    }
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = get_object_or_404(Message, pk=self.kwargs.get('pk'))
         return context_data
 
 

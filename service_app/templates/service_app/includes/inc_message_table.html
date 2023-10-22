@@ -1,0 +1,26 @@
+<table class="table table-secondary table-striped">
+    <thead class="mt-5">
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Тема</th>
+        <th scope="col">содержимое</th>
+        <th scope="col">Управление</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+        <tr>
+            <th scope="row">{{ object.pk }}</th>
+            <td>{{ object.title }}</td>
+            <td>{{ object.body|truncatechars:70 }}</td>
+            <td>
+                <a class="btn btn-outline-primary"
+                   href="{% url 'service_app:message_update' object.pk %}">изменить</a>
+                <a class="btn btn-outline-danger"
+                   href="{% url 'service_app:message_delete' object.pk %}">удалить</a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+

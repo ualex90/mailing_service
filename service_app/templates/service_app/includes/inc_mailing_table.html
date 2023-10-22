@@ -20,7 +20,11 @@
             <th scope="row">{{ object.pk }}</th>
             <td>{{ object.name }}</td>
             <td>{{ object.get_periodic_display }}</td>
-            <td>{{ object.message|truncatechars:25 }}</td>
+            <td>
+                <a href="{% url 'service_app:message_update' object.message.pk %}">
+                    {{ object.message|truncatechars:25 }}
+                </a>
+            </td>
             <td>{{ object.start_time }}</td>
             <td>
                 <a href="{% url 'logger_app:mailing_log' object.pk %}">
@@ -39,9 +43,9 @@
                            href="{% url 'service_app:toggle_activity' object.pk %}">Пауза</a>
                     {% endif %}
                     <a class="btn btn-outline-primary"
-                       href="{% url 'service_app:update' object.pk %}">изменить</a>
+                       href="{% url 'service_app:mailing_update' object.pk %}">изменить</a>
                     <a class="btn btn-outline-danger"
-                       href="{% url 'service_app:delete' object.pk %}">удалить</a>
+                       href="{% url 'service_app:mailing_delete' object.pk %}">удалить</a>
                 </div>
             </td>
         </tr>
