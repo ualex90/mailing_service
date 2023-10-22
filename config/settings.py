@@ -148,3 +148,8 @@ EMAIL_HOST_USER = 'noreply@oscarbot.ru'
 EMAIL_HOST_PASSWORD = 'AsTSNVv7pun9'
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# CronTab settings
+CRONJOBS = [
+    ('*/1 * * * *', 'service_app.services.scheduled_send_mailing')
+]
