@@ -26,7 +26,7 @@ def scheduled_send_mailing() -> None:
             mailing.save()
         else:
             # Если все условия совпали, проверяем время отправки и если пора, отправляем сообщений
-            if mailing.send_time + timedelta(minutes=mailing.periodic) < today if mailing.send_time else False:
+            if mailing.send_time + timedelta(minutes=mailing.periodic) < today if mailing.send_time else True:
                 send_mailing(mailing)
 
 
