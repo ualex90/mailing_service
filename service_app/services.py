@@ -1,63 +1,87 @@
 import smtplib
-from datetime import datetime
+from datetime import timedelta
 
 from django.core.mail import send_mass_mail
 
-import service_app
 from config.settings import EMAIL_HOST
-from customers_app.models import Customer
 from logger_app.models import MailingLog
 from service_app.models import Mailing
+from django.utils.timezone import now
 
 
-def send_mailing(pk: int) -> None:
-    """отправка сообщений подписанным на рассылку пользователям"""
-    attempt_status = 'Ошибка'
+def scheduled_send_mailing() -> None:
+    """Фильтрация рассылок и их отправка в автоматическом режиме"""
+    today = now()
+
+    # Перебор рассылок с фильтрацией
+    for mailing in (Mailing.objects.
+                    filter(start_time__lte=today).
+                    exclude(status=Mailing.PAUSED).
+                    exclude(status=Mailing.COMPLETED)):
+
+        # Проверка на завершение рассылки. Если по времени окончена,
+        # меняем статус на "Завершена" и идем к следующей рассылки
+        if mailing.stop_time < today if mailing.stop_time else False:
+            mailing.status = Mailing.COMPLETED
+            mailing.save()
+        else:
+            # Если все условия совпали, проверяем время отправки и если пора, отправляем сообщений
+            if mailing.send_time + timedelta(minutes=mailing.periodic) < today if mailing.send_time else False:
+                send_mailing(mailing)
+
+
+def send_mailing(mailing: Mailing, manual=None) -> None:
+    """
+    Оправка сообщений подписанным на рассылку пользователям.
+
+    Если передан "manual=True", то определяется режим отправки как "Ручной"
+    при этом не меняется статус и не фиксируется время отправки сообщения в модели рассылки
+    """
     is_successfully = False
     server_response = str()
 
     # формирование сообщений
-    mailing = Mailing.objects.get(pk=pk)
     message_list = get_message_list(mailing)
-
-    # отправка сообщений
-    try:
-        send_mass_mail(message_list, fail_silently=False)
-    except smtplib.SMTPSenderRefused:
-        server_response = 'Адрес отправителя отклонен: он не принадлежит авторизующемуся пользователю'
-    except smtplib.SMTPAuthenticationError:
-        server_response = 'Ошибка авторизации. Неправильное имя пользователя или пароль'
-    except OSError:
-        server_response = f'Хост ({EMAIL_HOST}) недоступен'
-    else:
-        is_successfully = True
-        mailing.sending_time = datetime.now()
-        mailing.save()
-    # Запись лога
-    MailingLog.objects.create(
-        mailing=mailing,
-        server_response=server_response,
-        is_successfully=is_successfully,
-    )
+    # Отправка сообщений
+    if message_list:
+        try:
+            send_mass_mail(message_list, fail_silently=False)
+        except smtplib.SMTPSenderRefused:
+            server_response = 'Адрес отправителя отклонен: он не принадлежит авторизующемуся пользователю'
+        except smtplib.SMTPAuthenticationError:
+            server_response = 'Ошибка авторизации. Неправильное имя пользователя или пароль'
+        except OSError:
+            server_response = f'Хост ({EMAIL_HOST}) недоступен'
+        else:
+            is_successfully = True
+            if not manual:
+                mailing.status = mailing.LAUNCHED
+                mailing.send_time = now().strftime('%Y-%m-%d %H:%M')
+            mailing.save()
+        # Запись лога
+        print(f'Успешная рассылка "{mailing}"')
+        MailingLog.objects.create(
+            mailing=mailing,
+            server_response=server_response,
+            is_successfully=is_successfully,
+            mode=MailingLog.MANUAL if manual else MailingLog.AUTO,
+        )
 
 
 def get_message_list(mailing: Mailing) -> list:
-    """Создание списка сообщений"""
-
+    """
+    Проверяем, включена ли рассылка у пользователей и если да,
+    формируем сообщение и добавляем его в список
+    """
     message_list = list()
-    for customer in Customer.objects.all():
-        try:
-            customer.subscriptions.get(pk=mailing.pk)
-        except service_app.models.Mailing.DoesNotExist:
-            pass
-        else:
-            if customer.is_mailing:
-                body = (f'Привет {customer.first_name}!\n'
-                        f'{mailing.body} \n\n'
-                        f'Данное сообщение сформировано автоматически. Просьба не отвечать.')
-                message = (mailing.title,
-                           body,
-                           None,
-                           [customer.email])
-                message_list.append(message)
+    for customer in mailing.customers.filter(is_mailing=True):
+        body = (f'Привет {customer.first_name}!\n'
+                f'{mailing.message.body} \n\n'
+                f'Данное сообщение сформировано автоматически. Просьба не отвечать.')
+        message = (mailing.message.title,
+                   body,
+                   None,
+                   [customer.email])
+        message_list.append(message)
+
     return message_list

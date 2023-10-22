@@ -3,11 +3,13 @@ from django.views.generic import ListView, TemplateView
 
 from logger_app.models import MailingLog
 from service_app.models import Mailing
+from django.core.paginator import Paginator
 
 
 class MailingLogListView(ListView):
     model = MailingLog
     queryset = MailingLog.objects.filter().order_by('pk').reverse()
+    # paginate_by = 9
     extra_context = {
         'title': 'Логи',
         'description': 'Логи рассылок',

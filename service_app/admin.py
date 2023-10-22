@@ -1,13 +1,13 @@
 from django.contrib import admin
 
-from service_app.models import Mailing, Periodicity
+from service_app.models import Mailing, Message
 
 
-@admin.register(Periodicity)
-class PeriodicityAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('title',)
 
 
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ('name', 'periodicity', 'title', 'start_time', 'stop_time', 'sending_time', 'status')
+    list_display = ('name', 'message', 'periodic', 'start_time', 'stop_time', 'status')

@@ -20,7 +20,7 @@ class MailingListView(ListView):
 class MailingCreateView(CreateView):
     model = Mailing
     success_url = reverse_lazy('service_app:index')
-    fields = ['name', 'title', 'body', 'periodicity', 'start_time', 'stop_time', 'status', 'is_active',]
+    fields = ['name', 'message', 'periodic', 'start_time', 'stop_time', 'customers',]
     extra_context = {
         'title': 'Рассылки',
         'description': 'Создание новой рассылки',
@@ -29,17 +29,22 @@ class MailingCreateView(CreateView):
 
 class MailingUpdateView(UpdateView):
     model = Mailing
-    fields = ['name', 'title', 'body', 'periodicity', 'start_time', 'stop_time', 'status', 'is_active', ]
+    fields = ['name', 'message', 'periodic', 'start_time', 'stop_time', 'customers',]
     success_url = reverse_lazy('service_app:index')
     extra_context = {
         'title': 'Рассылки',
         'description': 'Изменение рассылки',
     }
 
+    def post(self, request, *args, **kwargs):
+        Mailing.objects.update(status=Mailing.CREATED)
+        print(request.POST)
+        return super().post(request, *args, **kwargs)
+
 
 class MailingDeleteView(DeleteView):
     model = Mailing
-    success_url = reverse_lazy('customers_app:list')
+    success_url = reverse_lazy('service_app:index')
     extra_context = {
         'description': 'Удаление рассылки',
     }
@@ -52,10 +57,10 @@ class MailingDeleteView(DeleteView):
 
 def toggle_activity(request, pk):
     item = get_object_or_404(Mailing, pk=pk)
-    if item.is_active:
-        item.is_active = False
+    if item.status == Mailing.PAUSED:
+        item.status = Mailing.CREATED
     else:
-        item.is_active = True
+        item.status = Mailing.PAUSED
 
     item.save()
 
@@ -63,5 +68,5 @@ def toggle_activity(request, pk):
 
 
 def start_mailing(request, pk):
-    send_mailing(pk)
+    send_mailing(Mailing.objects.get(pk=pk), manual=True)
     return redirect(reverse('service_app:index'))

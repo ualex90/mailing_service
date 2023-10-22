@@ -29,7 +29,7 @@ class CustomerDetailView(DetailView):
 
 class CustomerCreateView(CreateView):
     model = Customer
-    fields = ['last_name', 'first_name', 'surname', 'email', 'comment', 'subscriptions', 'is_mailing']
+    fields = ['last_name', 'first_name', 'surname', 'email', 'comment', 'is_mailing']
     success_url = reverse_lazy('customers_app:list')
     extra_context = {
         'title': 'Клиент',
@@ -39,7 +39,7 @@ class CustomerCreateView(CreateView):
 
 class CustomerUpdateView(UpdateView):
     model = Customer
-    fields = ['last_name', 'first_name', 'surname', 'email', 'comment', 'subscriptions', 'is_mailing']
+    fields = ['last_name', 'first_name', 'surname', 'email', 'comment', 'is_mailing']
     extra_context = {
         'description': 'Изменить клиента',
     }
