@@ -1,0 +1,28 @@
+<table class="table table-secondary table-striped">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Имя</th>
+        <th scope="col">email</th>
+        <th scope="col">Управление</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+        <tr>
+            <th scope="row">{{ object.pk }}</th>
+            <td>
+                <a href="{% url 'customers_app:detail' object.pk %}">
+                    {{ object.last_name }} {{ object.first_name }} {{ object.surname }}
+                </a>
+            </td>
+            <td>{{ object.email }}</td>
+            <td>
+                <a class="btn btn-outline-primary"
+                   href="{% url 'customers_app:update' object.pk %}">изменить</a>
+                <a class="btn btn-outline-danger"
+                   href="{% url 'customers_app:delete' object.pk %}">удалить</a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>

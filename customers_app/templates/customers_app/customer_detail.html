@@ -1,0 +1,21 @@
+{% extends 'service_app/base.html' %}
+{% block content %}
+     <div class="col-1">
+        <input type="button" class="btn btn-secondary form-control" onclick="history.back()" value="<< назад"/>
+    </div>
+    <div class="row mt-2">
+        <h4>{{ object.last_name }} {{ object.first_name }} {{ object.surname }}</h4>
+    </div>
+    <div>
+        <p><b>Электронная почта:</b> {{ object.email }}</p>
+        <p><b>Подписки:</b></p>
+        {% if object.is_mailing %}
+            {% for subscription in object.subscriptions.all %}
+                <p>{{ subscription }}</p>
+            {% endfor %}
+        {% else %}
+            <p>Подписки отключены</p>
+        {% endif %}
+        <p><b>Дополнительные сведения:</b> {{ object.comment }}</p>
+    </div>
+{% endblock %}

@@ -11,6 +11,8 @@ python = "^3.11"
 django = "^4.2.6"
 psycopg2-binary = "^2.9.9"
 python-dotenv = "^1.0.0"
+ipython = "^8.16.1"
+django-crontab = "^0.7.1"
 
 
 [build-system]

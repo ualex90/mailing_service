@@ -1,0 +1,10 @@
+{% extends 'service_app/base.html' %}
+{% block content %}
+    <div class="col-6 mb-5">
+        <a class="btn btn-outline-primary"
+           href="{% url 'service_app:mailing_create' %}">Добавить рассылку</a>
+    </div>
+    <div class="row">
+        {% include 'service_app/includes/inc_mailing_table.html' %}
+    </div>
+{% endblock %}
