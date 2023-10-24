@@ -56,10 +56,6 @@ class MailingUpdateView(UpdateView):
         'description': 'Изменение рассылки',
     }
 
-    def post(self, request, *args, **kwargs):
-        pass
-        return super().post(request, *args, **kwargs)
-
 
 class MessageUpdateView(UpdateView):
     model = Message
