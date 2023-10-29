@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
+from service_app.forms import MessageForm, MailingForm
 from service_app.models import Mailing, Message
 from service_app.services import send_mailing
 
@@ -30,7 +31,7 @@ class MessageListView(ListView):
 class MailingCreateView(CreateView):
     model = Mailing
     success_url = reverse_lazy('service_app:index')
-    fields = ['name', 'message', 'periodic', 'start_time', 'stop_time', 'customers',]
+    form_class = MailingForm
     extra_context = {
         'title': 'Рассылки',
         'description': 'Создание новой рассылки',
@@ -40,7 +41,7 @@ class MailingCreateView(CreateView):
 class MessageCreateView(CreateView):
     model = Message
     success_url = reverse_lazy('service_app:message_list')
-    fields = ['title', 'body',]
+    form_class = MessageForm
     extra_context = {
         'title': 'Сообщение',
         'description': 'Создание нового сообщения',
@@ -49,7 +50,7 @@ class MessageCreateView(CreateView):
 
 class MailingUpdateView(UpdateView):
     model = Mailing
-    fields = ['name', 'message', 'periodic', 'start_time', 'stop_time', 'customers',]
+    form_class = MailingForm
     success_url = reverse_lazy('service_app:index')
     extra_context = {
         'title': 'Рассылки',
@@ -60,7 +61,7 @@ class MailingUpdateView(UpdateView):
 class MessageUpdateView(UpdateView):
     model = Message
     success_url = reverse_lazy('service_app:message_list')
-    fields = ['title', 'body',]
+    form_class = MessageForm
     extra_context = {
         'title': 'Сообщение',
         'description': 'Изменение сообщения',

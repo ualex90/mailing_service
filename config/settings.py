@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django_crontab',
     'service_app',
     'customers_app',
-    'logger_app'
+    'logger_app',
+    'users_app',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +154,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CRONJOBS = [
     ('*/1 * * * *', 'service_app.services.scheduled_send_mailing')
 ]
+
+# authorization settings
+AUTH_USER_MODEL = 'users_app.User'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

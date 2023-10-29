@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 
+from customers_app.forms import CustomerForm
 from customers_app.models import Customer
 
 
@@ -29,7 +30,7 @@ class CustomerDetailView(DetailView):
 
 class CustomerCreateView(CreateView):
     model = Customer
-    fields = ['last_name', 'first_name', 'surname', 'email', 'comment', 'is_mailing']
+    form_class = CustomerForm
     success_url = reverse_lazy('customers_app:list')
     extra_context = {
         'title': 'Клиент',
@@ -39,7 +40,7 @@ class CustomerCreateView(CreateView):
 
 class CustomerUpdateView(UpdateView):
     model = Customer
-    fields = ['last_name', 'first_name', 'surname', 'email', 'comment', 'is_mailing']
+    form_class = CustomerForm
     extra_context = {
         'description': 'Изменить клиента',
     }

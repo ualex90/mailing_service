@@ -1,17 +1,33 @@
 {% extends 'service_app/base.html' %}
+
 {% block content %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <a href="{% url 'customers_app:list' %}" type="button" class="btn btn-secondary">
-            << Назад
-        </a>
-        <button type="submit" class="btn btn-primary">
-            {% if object %}
-                Изменить
-            {% else %}
-                Создать
-            {% endif %}
-        </button>
-    </form>
+    <div class="coll-12">
+        <form class="row" method="post" enctype="multipart/form-data">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Клиент
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <a href="{% url 'customers_app:list' %}" type="button" class="btn btn-secondary">
+                            << Назад
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            {% if object %}
+                                Изменить
+                            {% else %}
+                                Создать
+                            {% endif %}
+                        </button>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}

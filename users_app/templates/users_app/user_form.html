@@ -7,21 +7,14 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">
-                            Рассылка
-                        </h3>
+                        <h2 class="card-title">
+                            Профиль
+                        </h2>
                     </div>
                     <div class="card-body">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary">
-                            {% if object %}
-                                Изменить
-                            {% else %}
-                                Создать
-                            {% endif %}
-                        </button>
-                        <input type="button" class="btn btn-secondary" onclick="history.back()" value="Отмена"/>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
                     </div>
                     <div class="card-footer"></div>
                 </div>

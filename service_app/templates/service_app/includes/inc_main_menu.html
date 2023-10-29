@@ -1,6 +1,17 @@
 <div class="col-10"></div>
 <div class="col-2 mt-3 text-white">
-    <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
+    {% if user.is_authenticated %}
+        <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
+           href="{% url 'users_app:profile' %}">Профиль</a>
+        <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
+           href="{% url 'users_app:logout' %}">Выйти</a>
+    {% else %}
+        <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
+           href="{% url 'users_app:register' %}">Зарегистрироваться</a>
+        <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
+           href="{% url 'users_app:login' %}">Войти</a>
+    {% endif %}
+    <a class="btn btn-sm btn-outline-secondary form-control mt-3" type="submit"
        href="{% url 'service_app:index' %}">Список рассылок</a>
     <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
        href="{% url 'service_app:message_list' %}">Сообщения</a>
