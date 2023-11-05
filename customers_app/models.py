@@ -11,6 +11,7 @@ class Customer(models.Model):
     email = models.EmailField(max_length=100, unique=True, verbose_name='email')
     comment = models.TextField(**NULLABLE, verbose_name='комментарий')
     is_mailing = models.BooleanField(default=True, verbose_name='подписка на рассылки')
+    owner = models.ForeignKey('users_app.User', **NULLABLE, on_delete=models.CASCADE, verbose_name='создал')
 
     def __str__(self):
         return f'{self.last_name} {self.first_name} {self.surname}'

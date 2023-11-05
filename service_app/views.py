@@ -37,6 +37,12 @@ class MailingCreateView(CreateView):
         'description': 'Создание новой рассылки',
     }
 
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
 
 class MessageCreateView(CreateView):
     model = Message
@@ -46,6 +52,12 @@ class MessageCreateView(CreateView):
         'title': 'Сообщение',
         'description': 'Создание нового сообщения',
     }
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
 
 class MailingUpdateView(UpdateView):

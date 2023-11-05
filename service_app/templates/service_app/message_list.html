@@ -1,7 +1,9 @@
 {% extends 'service_app/base.html' %}
 {% block content %}
     <div class="col-1">
-        <input type="button" class="btn btn-secondary form-control" onclick="history.back()" value="<< назад"/>
+        <a href="{% url 'customers_app:list' %}" type="button" class="btn btn-secondary form-control">
+            << назад
+        </a>
     </div>
     <div class="col-6 mt-3">
         <a class="btn btn-outline-primary"
