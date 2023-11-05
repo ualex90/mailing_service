@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -7,7 +8,7 @@ from service_app.models import Mailing, Message
 from service_app.services import send_mailing
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     queryset = Mailing.objects.filter().order_by('pk').reverse()
     template_name = 'service_app/index.html'
@@ -18,7 +19,7 @@ class MailingListView(ListView):
     }
 
 
-class MessageListView(ListView):
+class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     queryset = Message.objects.filter().order_by('pk').reverse()
 
@@ -28,7 +29,7 @@ class MessageListView(ListView):
     }
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     success_url = reverse_lazy('service_app:index')
     form_class = MailingForm
@@ -44,7 +45,7 @@ class MailingCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MessageCreateView(CreateView):
+class MessageCreateView(LoginRequiredMixin, CreateView):
     model = Message
     success_url = reverse_lazy('service_app:message_list')
     form_class = MessageForm
@@ -60,7 +61,7 @@ class MessageCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('service_app:index')
@@ -70,7 +71,7 @@ class MailingUpdateView(UpdateView):
     }
 
 
-class MessageUpdateView(UpdateView):
+class MessageUpdateView(LoginRequiredMixin, UpdateView):
     model = Message
     success_url = reverse_lazy('service_app:message_list')
     form_class = MessageForm
@@ -80,7 +81,7 @@ class MessageUpdateView(UpdateView):
     }
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy('service_app:index')
     extra_context = {
@@ -93,7 +94,7 @@ class MailingDeleteView(DeleteView):
         return context_data
 
 
-class MessageDeleteView(DeleteView):
+class MessageDeleteView(LoginRequiredMixin, DeleteView):
     model = Message
     success_url = reverse_lazy('service_app:message_list')
     extra_context = {

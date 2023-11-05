@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
@@ -6,7 +7,7 @@ from customers_app.forms import CustomerForm
 from customers_app.models import Customer
 
 
-class CustomerListView(ListView):
+class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     queryset = Customer.objects.filter().order_by('pk').reverse()
     extra_context = {
@@ -15,7 +16,7 @@ class CustomerListView(ListView):
     }
 
 
-class CustomerDetailView(DetailView):
+class CustomerDetailView(LoginRequiredMixin, DetailView):
     model = Customer
     extra_context = {
         'description': 'Карточка клиента',
@@ -28,7 +29,7 @@ class CustomerDetailView(DetailView):
         return context_data
 
 
-class CustomerCreateView(CreateView):
+class CustomerCreateView(LoginRequiredMixin, CreateView):
     model = Customer
     form_class = CustomerForm
     success_url = reverse_lazy('customers_app:list')
@@ -44,7 +45,7 @@ class CustomerCreateView(CreateView):
         return super().form_valid(form)
 
 
-class CustomerUpdateView(UpdateView):
+class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerForm
     extra_context = {
@@ -61,7 +62,7 @@ class CustomerUpdateView(UpdateView):
         return reverse('customers_app:detail', args=[self.object.pk])
 
 
-class CustomerDeleteView(DeleteView):
+class CustomerDeleteView(LoginRequiredMixin, DeleteView):
     model = Customer
     success_url = reverse_lazy('customers_app:list')
     extra_context = {
