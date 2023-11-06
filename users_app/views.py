@@ -5,7 +5,7 @@ from django.contrib.auth.views import LogoutView as BaseLogoutView
 from django.core.mail import send_mail
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, TemplateView, UpdateView, ListView
+from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView
 
 import users_app
 from users_app.forms import LoginForm, RegisterForm, UserProfileForm
@@ -112,6 +112,15 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     }
 
 
+class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = User
+    permission_required = 'users_app.view_user'
+    extra_context = {
+        'title': 'Пользователь',
+        'description': 'Данные пользователя',
+    }
+
+
 class ProfileView(UpdateView):
     model = User
     form_class = UserProfileForm
@@ -139,4 +148,4 @@ def set_active(request, pk):
 
         item.save()
 
-    return redirect(reverse('users_app:user_list'))
+    return redirect(reverse('users_app:list'))

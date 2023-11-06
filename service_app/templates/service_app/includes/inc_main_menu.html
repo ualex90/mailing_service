@@ -13,7 +13,7 @@
     {% endif %}
     {% if perms.users_app.view_user %}
         <a class="btn btn-sm btn-outline-secondary form-control mt-3" type="submit"
-           href="{% url 'users_app:user_list' %}">Пользователи</a>
+           href="{% url 'users_app:list' %}">Пользователи</a>
     {% endif %}
     <a class="btn btn-sm btn-outline-secondary form-control mt-3" type="submit"
        href="{% url 'service_app:index' %}">Список рассылок</a>
