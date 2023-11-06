@@ -1,10 +1,10 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 
 from customers_app.forms import CustomerForm
 from customers_app.models import Customer
+from service_app.views import UserHasPermissionMixin
 
 
 class CustomerListView(LoginRequiredMixin, ListView):
@@ -15,9 +15,16 @@ class CustomerListView(LoginRequiredMixin, ListView):
         'description': 'Список клиентов',
     }
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_staff:
+            return queryset
+        return queryset.filter(owner=self.request.user)
 
-class CustomerDetailView(LoginRequiredMixin, DetailView):
+
+class CustomerDetailView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, DetailView):
     model = Customer
+    permission_required = 'customers_app.view_customer'
     extra_context = {
         'description': 'Карточка клиента',
     }
@@ -45,8 +52,9 @@ class CustomerCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CustomerUpdateView(LoginRequiredMixin, UpdateView):
+class CustomerUpdateView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, UpdateView):
     model = Customer
+    permission_required = 'customers_app.change_customer'
     form_class = CustomerForm
     extra_context = {
         'description': 'Изменить клиента',
@@ -62,8 +70,9 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('customers_app:detail', args=[self.object.pk])
 
 
-class CustomerDeleteView(LoginRequiredMixin, DeleteView):
+class CustomerDeleteView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, DeleteView):
     model = Customer
+    permission_required = 'customers_app.delete_customer'
     success_url = reverse_lazy('customers_app:list')
     extra_context = {
         'description': 'Удаление клиента',

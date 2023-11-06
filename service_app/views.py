@@ -1,4 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -6,6 +7,15 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from service_app.forms import MessageForm, MailingForm
 from service_app.models import Mailing, Message
 from service_app.services import send_mailing
+
+
+class UserHasPermissionMixin:
+    def has_permission(self):
+        # Проверяем, является ли пользователь владельцем рассылки, если да, то разрешаем операцию
+        if self.model.objects.get(pk=self.kwargs.get('pk')).owner == self.request.user:
+            return True
+        # если не является, то следуем ограничениям прав permission_required
+        return super().has_permission()
 
 
 class MailingListView(LoginRequiredMixin, ListView):
@@ -18,6 +28,12 @@ class MailingListView(LoginRequiredMixin, ListView):
         'description': 'Список рассылок',
     }
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_staff:
+            return queryset
+        return queryset.filter(owner=self.request.user)
+
 
 class MessageListView(LoginRequiredMixin, ListView):
     model = Message
@@ -28,6 +44,12 @@ class MessageListView(LoginRequiredMixin, ListView):
         'description': 'Список сообщений',
     }
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_staff:
+            return queryset
+        return queryset.filter(owner=self.request.user)
+
 
 class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
@@ -37,6 +59,12 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         'title': 'Рассылки',
         'description': 'Создание новой рассылки',
     }
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Добавляем в форму аргумент содержащий текущего пользователя
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
@@ -61,8 +89,9 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(LoginRequiredMixin, UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, UpdateView):
     model = Mailing
+    permission_required = 'service_app.change_mailing'
     form_class = MailingForm
     success_url = reverse_lazy('service_app:index')
     extra_context = {
@@ -70,9 +99,16 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
         'description': 'Изменение рассылки',
     }
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Добавляем в форму аргумент содержащий текущего пользователя
+        kwargs["user"] = self.request.user
+        return kwargs
 
-class MessageUpdateView(LoginRequiredMixin, UpdateView):
+
+class MessageUpdateView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, UpdateView):
     model = Message
+    permission_required = 'service_app.change_message'
     success_url = reverse_lazy('service_app:message_list')
     form_class = MessageForm
     extra_context = {
@@ -81,8 +117,9 @@ class MessageUpdateView(LoginRequiredMixin, UpdateView):
     }
 
 
-class MailingDeleteView(LoginRequiredMixin, DeleteView):
+class MailingDeleteView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, DeleteView):
     model = Mailing
+    permission_required = 'service_app.delete_mailing'
     success_url = reverse_lazy('service_app:index')
     extra_context = {
         'description': 'Удаление рассылки',
@@ -94,8 +131,9 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
         return context_data
 
 
-class MessageDeleteView(LoginRequiredMixin, DeleteView):
+class MessageDeleteView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, DeleteView):
     model = Message
+    permission_required = 'service_app.delete_message'
     success_url = reverse_lazy('service_app:message_list')
     extra_context = {
         'description': 'Удаление сообщения',
@@ -107,6 +145,7 @@ class MessageDeleteView(LoginRequiredMixin, DeleteView):
         return context_data
 
 
+@login_required
 def toggle_activity(request, pk):
     item = get_object_or_404(Mailing, pk=pk)
     if item.status == Mailing.PAUSED:
@@ -119,6 +158,7 @@ def toggle_activity(request, pk):
     return redirect(reverse('service_app:index'))
 
 
+@login_required
 def start_mailing(request, pk):
     send_mailing(Mailing.objects.get(pk=pk), manual=True)
     return redirect(reverse('service_app:index'))
