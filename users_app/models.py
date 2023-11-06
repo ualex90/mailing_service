@@ -26,12 +26,18 @@ class User(AbstractUser):
 
     first_name = models.CharField(**NULLABLE, max_length=35, verbose_name='Имя')
     last_name = models.CharField(**NULLABLE, max_length=35, verbose_name='Фамилия')
-    phone = models.CharField(**NULLABLE, max_length=35, verbose_name='номер телефона')
+    surname = models.CharField(**NULLABLE, max_length=35, verbose_name='Отчество')
+    phone = models.CharField(**NULLABLE, max_length=35, verbose_name='Номер телефона')
     telegram = models.CharField(**NULLABLE, max_length=30, verbose_name='Telegram')
-    country = models.CharField(**NULLABLE, max_length=25, choices=COUNTRY_CHOICES, verbose_name='страна')
-    avatar = models.ImageField(**NULLABLE, verbose_name='аватар')
-    key = models.CharField(**NULLABLE, max_length=25, unique=True, verbose_name='ключ пользователя')
-    is_active = models.BooleanField(default=False, verbose_name='активен')
+    country = models.CharField(**NULLABLE, max_length=25, choices=COUNTRY_CHOICES, verbose_name='Страна')
+    avatar = models.ImageField(**NULLABLE, verbose_name='Аватар')
+    key = models.CharField(**NULLABLE, max_length=25, unique=True, verbose_name='Ключ пользователя')
+    is_active = models.BooleanField(default=False, verbose_name='Активен')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    class Meta:
+        permissions = [
+            ('set_active', 'Блокировка пользователя>'),
+        ]

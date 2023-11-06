@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
 from django.core.mail import send_mail
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, TemplateView, UpdateView
+from django.views.generic import CreateView, TemplateView, UpdateView, ListView
 
 import users_app
 from users_app.forms import LoginForm, RegisterForm, UserProfileForm
@@ -100,6 +102,16 @@ class PasswordRecoveryView(TemplateView):
         return self.render_to_response(context)
 
 
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = User
+    queryset = model.objects.filter().order_by('pk').reverse()
+    permission_required = 'users_app.view_user'
+    extra_context = {
+        'title': 'Пользователи',
+        'description': 'Список пользователей',
+    }
+
+
 class ProfileView(UpdateView):
     model = User
     form_class = UserProfileForm
@@ -111,3 +123,20 @@ class ProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+@permission_required('users_app.set_active')
+@login_required
+def set_active(request, pk):
+    item = get_object_or_404(User, pk=pk)
+
+    # Суперпользователя может заблокировать или разблокировать только суперпользователь
+    if not item.is_superuser or request.user.is_superuser:
+        if item.is_active:
+            item.is_active = False
+        else:
+            item.is_active = True
+
+        item.save()
+
+    return redirect(reverse('users_app:user_list'))
