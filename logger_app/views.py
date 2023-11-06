@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import OuterRef
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, TemplateView
 
 from logger_app.models import MailingLog
@@ -36,11 +36,15 @@ class MailingLogView(LoginRequiredMixin, TemplateView):
             context_data['object_list'] = (MailingLog.objects.
                                            filter(mailing=self.kwargs.get('pk')).
                                            order_by('pk').reverse())
+            context_data['title'] = Mailing.objects.get(pk=self.kwargs.get("pk"))
+            context_data['description'] = f'Логи рассылки "{Mailing.objects.get(pk=self.kwargs.get("pk")).name}"'
         else:
             context_data['object_list'] = (MailingLog.objects.
                                            filter(mailing=self.kwargs.get('pk')).
                                            filter(mailing__owner=self.request.user).
                                            order_by('pk').reverse())
-        context_data['title'] = Mailing.objects.get(pk=self.kwargs.get("pk"))
-        context_data['description'] = f'Логи рассылки "{Mailing.objects.get(pk=self.kwargs.get("pk")).name}"'
+            mailing = Mailing.objects.filter(owner=self.request.user)
+            context_data['title'] = get_object_or_404(mailing, pk=self.kwargs.get("pk"))
+            context_data['description'] = f'Логи рассылки "{mailing.get(pk=self.kwargs.get("pk")).name}"'
+
         return context_data

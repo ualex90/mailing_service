@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -146,19 +146,39 @@ class MessageDeleteView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRe
 
 
 @login_required
-def toggle_activity(request, pk):
+def set_pause(request, pk):
     item = get_object_or_404(Mailing, pk=pk)
-    if item.status == Mailing.PAUSED:
-        item.status = Mailing.CREATED
-    else:
-        item.status = Mailing.PAUSED
 
-    item.save()
+    # Проверяем, является ли пользователь создателем рассылки или есть ли у него права на постановку паузы
+    if item.owner == request.user or request.user.has_perms(['service_app.set_pause']):
+        if item.status == Mailing.PAUSED:
+            item.status = Mailing.CREATED
+        else:
+            item.status = Mailing.PAUSED
+
+        item.save()
 
     return redirect(reverse('service_app:index'))
 
 
 @login_required
 def start_mailing(request, pk):
-    send_mailing(Mailing.objects.get(pk=pk), manual=True)
+    item = get_object_or_404(Mailing, pk=pk)
+    if item.owner == request.user or request.user.has_perms(['service_app.set_pause']):
+        send_mailing(item, manual=True)
+    return redirect(reverse('service_app:index'))
+
+
+@permission_required('set_active')
+@login_required
+def set_active(request, pk):
+    item = get_object_or_404(Mailing, pk=pk)
+    if item.owner == request.user or request.user.is_staff:
+        if item.status == Mailing.PAUSED:
+            item.status = Mailing.CREATED
+        else:
+            item.status = Mailing.PAUSED
+
+        item.save()
+
     return redirect(reverse('service_app:index'))

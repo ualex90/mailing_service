@@ -1,7 +1,7 @@
 from django.urls import path
 
 from service_app.apps import ServiceAppConfig
-from service_app.views import MailingListView, MailingCreateView, MailingUpdateView, toggle_activity, \
+from service_app.views import MailingListView, MailingCreateView, MailingUpdateView, set_pause, \
     MailingDeleteView, start_mailing, MessageListView, MessageCreateView, MessageUpdateView, MessageDeleteView
 
 app_name = ServiceAppConfig.name
@@ -11,7 +11,7 @@ urlpatterns = [
     path('mailing/create/', MailingCreateView.as_view(), name='mailing_create'),
     path('mailing/update/<int:pk>/', MailingUpdateView.as_view(), name='mailing_update'),
     path('mailing/delete/<int:pk>/', MailingDeleteView.as_view(), name='mailing_delete'),
-    path('mailing/activity/<int:pk>/', toggle_activity, name='toggle_activity'),
+    path('mailing/activity/<int:pk>/', set_pause, name='pause'),
     path('mailing/send/<int:pk>/', start_mailing, name='start_mailing'),
     path('message/list/', MessageListView.as_view(), name='message_list'),
     path('message/create/', MessageCreateView.as_view(), name='message_create'),

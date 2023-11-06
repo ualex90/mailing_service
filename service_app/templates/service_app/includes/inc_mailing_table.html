@@ -42,10 +42,10 @@
                        href="{% url 'service_app:start_mailing' object.pk %}">Go</a>
                     {% if object.status == 'PA' %}
                         <a class="btn btn-success"
-                           href="{% url 'service_app:toggle_activity' object.pk %}">Старт</a>
+                           href="{% url 'service_app:pause' object.pk %}">Старт</a>
                     {% else %}
                         <a class="btn btn-secondary"
-                           href="{% url 'service_app:toggle_activity' object.pk %}">Пауза</a>
+                           href="{% url 'service_app:pause' object.pk %}">Пауза</a>
                     {% endif %}
                     <a class="btn btn-outline-primary"
                        href="{% url 'service_app:mailing_update' object.pk %}">изменить</a>
