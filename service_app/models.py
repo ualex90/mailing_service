@@ -75,5 +75,5 @@ class Mailing(models.Model):
         permissions = [
             ('set_pause', 'Приостановка рассылки'),
             ('start_mailing', 'Ручной запуск рассылки'),
-            ('set_active', 'Активность рассылки'),
+            ('set_active', 'Активировать рассылку'),
         ]

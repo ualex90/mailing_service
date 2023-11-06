@@ -149,8 +149,10 @@ class MessageDeleteView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRe
 def set_pause(request, pk):
     item = get_object_or_404(Mailing, pk=pk)
 
-    # Проверяем, является ли пользователь создателем рассылки или есть ли у него права на постановку паузы
-    if item.owner == request.user or request.user.has_perms(['service_app.set_pause']):
+    # Проверяем, является ли пользователь создателем рассылки
+    # или есть ли у него права на постановку паузы
+    # и рассылка активная
+    if (item.owner == request.user or request.user.has_perms(['service_app.set_pause'])) and item.is_active:
         if item.status == Mailing.PAUSED:
             item.status = Mailing.CREATED
         else:
@@ -164,21 +166,26 @@ def set_pause(request, pk):
 @login_required
 def start_mailing(request, pk):
     item = get_object_or_404(Mailing, pk=pk)
-    if item.owner == request.user or request.user.has_perms(['service_app.set_pause']):
+
+    # Если пользователь создатель
+    # или имеет права на отправку
+    # и рассылка активная
+    if (item.owner == request.user or request.user.has_perms(['service_app.set_pause'])) and item.is_active:
         send_mailing(item, manual=True)
     return redirect(reverse('service_app:index'))
 
 
-@permission_required('set_active')
+@permission_required('service_app.set_active')
 @login_required
 def set_active(request, pk):
     item = get_object_or_404(Mailing, pk=pk)
-    if item.owner == request.user or request.user.is_staff:
-        if item.status == Mailing.PAUSED:
-            item.status = Mailing.CREATED
-        else:
-            item.status = Mailing.PAUSED
+    if item.is_active:
+        item.is_active = False
+        item.status = Mailing.PAUSED
+    else:
+        item.is_active = True
+        item.status = Mailing.CREATED
 
-        item.save()
+    item.save()
 
     return redirect(reverse('service_app:index'))
