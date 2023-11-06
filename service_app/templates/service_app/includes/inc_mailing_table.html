@@ -39,11 +39,11 @@
                 <a href="{% url 'logger_app:mailing_log' object.pk %}">
                     {{ object.get_status_display }}
                 </a>
-                {% else %}
-                    <a class="text-danger" href="{% url 'logger_app:mailing_log' object.pk %}">
-                        ОТКЛЮЧЕНО!
-                    </a>
-                {% endif %}
+            {% else %}
+                <a class="text-danger" href="{% url 'logger_app:mailing_log' object.pk %}">
+                    ОТКЛЮЧЕНО!
+                </a>
+            {% endif %}
             </td>
             <td>
                 <div>
@@ -56,9 +56,11 @@
                                href="{% url 'service_app:set_active' object.pk %}">Вкл</a>
                         {% endif %}
                     {% endif %}
-                    {% if object.owner == user or user.is_superuser %}
+                    {% if object.owner == user or perms.service_app.start_mailing %}
                         <a class="btn btn-primary"
                            href="{% url 'service_app:start_mailing' object.pk %}">Go</a>
+                    {% endif %}
+                    {% if object.owner == user or perms.service_app.set_pause %}
                         {% if object.status == 'PA' %}
                             <a class="btn btn-success"
                                href="{% url 'service_app:pause' object.pk %}">Старт</a>
@@ -66,8 +68,12 @@
                             <a class="btn btn-secondary"
                                href="{% url 'service_app:pause' object.pk %}">Пауза</a>
                         {% endif %}
+                    {% endif %}
+                    {% if object.owner == user or perms.service_app.change_mailing %}
                         <a class="btn btn-outline-primary"
                            href="{% url 'service_app:mailing_update' object.pk %}">Изменить</a>
+                    {% endif %}
+                    {% if object.owner == user or perms.service_app.delete_mailing %}
                         <a class="btn btn-outline-danger"
                            href="{% url 'service_app:mailing_delete' object.pk %}">Удалить</a>
                     {% endif %}
