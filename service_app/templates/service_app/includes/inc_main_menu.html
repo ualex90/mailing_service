@@ -2,7 +2,7 @@
 <div class="col-2 mt-3 text-white">
     {% if user.is_authenticated %}
         <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
-           href="{% url 'users_app:profile' %}">Профиль</a>
+           href="{% url 'users_app:profile' user.pk %}">Профиль</a>
         <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
            href="{% url 'users_app:logout' %}">Выйти</a>
     {% else %}
@@ -15,14 +15,20 @@
         <a class="btn btn-sm btn-outline-secondary form-control mt-3" type="submit"
            href="{% url 'users_app:list' %}">Пользователи</a>
     {% endif %}
+    {% if user.is_authenticated %}
+        <a class="btn btn-sm btn-outline-secondary form-control mt-3" type="submit"
+           href="{% url 'service_app:index' %}">Список рассылок</a>
+        <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
+           href="{% url 'service_app:message_list' %}">Сообщения</a>
+        <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
+           href="{% url 'customers_app:list' %}">Клиенты</a>
+        <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
+           href="{% url 'logger_app:log' %}">Логи</a>
+    {% endif %}
     <a class="btn btn-sm btn-outline-secondary form-control mt-3" type="submit"
-       href="{% url 'service_app:index' %}">Список рассылок</a>
-    <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
-       href="{% url 'service_app:message_list' %}">Сообщения</a>
-    <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
-       href="{% url 'customers_app:list' %}">Клиенты</a>
-    <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
-       href="{% url 'logger_app:log' %}">Логи</a>
-    <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
-       href="/admin/">Администрирование</a>
+       href="{% url 'blog_app:blog' %}">Блог</a>
+    {% if user.is_staff %}
+        <a class="btn btn-sm btn-outline-secondary form-control mt-3" type="submit"
+           href="/admin/">Администрирование</a>
+    {% endif %}
 </div>

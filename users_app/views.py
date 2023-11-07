@@ -8,6 +8,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView
 
 import users_app
+from service_app.views import UserHasPermissionMixin
 from users_app.forms import LoginForm, RegisterForm, UserProfileForm
 from users_app.models import User
 from users_app.utils import get_user_key, get_password
@@ -116,15 +117,27 @@ class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = User
     permission_required = 'users_app.view_user'
     extra_context = {
-        'title': 'Пользователь',
-        'description': 'Данные пользователя',
+        'title': 'Профиль',
+        'description': 'Профиль пользователя',
     }
 
+    def has_permission(self):
+        # Проверяем, является ли пользователь владельцем рассылки, если да, то разрешаем операцию
+        if self.model.objects.get(pk=self.kwargs.get('pk')) == self.request.user:
+            return True
+        # print(User.objects.get(pk=1))
+        # если не является, то следуем ограничениям прав permission_required
+        return super().has_permission()
 
-class ProfileView(UpdateView):
+    def get_context_data(self, **kwargs):
+        contex_data = super().get_context_data()
+        contex_data['self_user'] = self.request.user
+        return contex_data
+
+
+class UpdateProfileView(UpdateView):
     model = User
     form_class = UserProfileForm
-    success_url = reverse_lazy('users_app:profile')
     extra_context = {
         'title': 'Профиль',
         'description': 'Редактировать профиль пользователя',
@@ -132,6 +145,9 @@ class ProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_success_url(self):
+        return reverse('users_app:profile', args=[self.request.user.pk])
 
 
 @permission_required('users_app.set_active')

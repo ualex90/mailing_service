@@ -1,0 +1,17 @@
+{% extends 'service_app/base.html' %}
+{% block content %}
+    {% if perms.blog_app.manage_content %}
+        <div class="col-auto mb-5">
+            <a href="{% url "blog_app:edit_list" %}" class="btn btn-outline-primary">Настроить ленту</a>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-12">
+            {% for object in object_list %}
+                {% if object.is_published %}
+                    {% include 'blog_app/includes/inc_post_card.html' %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

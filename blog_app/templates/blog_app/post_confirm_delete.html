@@ -1,0 +1,13 @@
+{% extends 'service_app/base.html' %}
+{% block content %}
+    <div class="row">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>Действительно хотите удалить запись "{{ object.title|truncatechars:30 }}"?</p>
+            <button type="submit" class="btn btn-danger">
+                Удалить
+            </button>
+            <input type="button" class="btn btn-secondary" onclick="history.back()" value="Отмена"/>
+        </form>
+    </div>
+{% endblock %}

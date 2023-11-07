@@ -1,20 +1,37 @@
 {% extends 'service_app/base.html' %}
 {% load users_tags %}
 {% block content %}
-    <div class="col-1">
-        <a href="{% url 'users_app:list' %}" type="button" class="btn btn-secondary form-control">
+    <div class="row">
+        <div class="col-2">
+            {% if perms.users_app.view_user %}
+                <a href="{% url 'users_app:list' %}" type="button" class="btn btn-secondary form-control">
+            {% else %}
+                <a href="{% url 'service_app:index' %}" type="button" class="btn btn-secondary form-control">
+            {% endif %}
             << назад
-        </a>
+            </a>
+        </div>
+        <div class="col-2">
+            {% if self_user == user %}
+                <a href="{% url 'users_app:update_profile' %}" type="button"
+                   class="btn btn-outline-primary form-control">
+                Редактировать
+            {% endif %}
+            </a>
+        </div>
     </div>
     <div class="row mt-2">
         <div class="col-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        Информация о пользователе
+                    <h3 class="card-title text-center">
+                        Профиль
                     </h3>
                 </div>
                 <div class="card-body">
+                    {% if not user.is_active %}
+                        <h4 class="text-danger text-center">ЗАБЛОКИРОВАН</h4>
+                    {% endif %}
                     <table class="table">
                         <tr>
                             <td>Фамилия</td>
@@ -77,7 +94,7 @@
                     </table>
                 </div>
                 <div class="card-header">
-                    <h3 class="card-title">
+                    <h3 class="card-title text-center">
                         Группы пользователя
                     </h3>
                 </div>

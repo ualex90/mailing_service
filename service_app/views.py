@@ -11,7 +11,7 @@ from service_app.services import send_mailing
 
 class UserHasPermissionMixin:
     def has_permission(self):
-        # Проверяем, является ли пользователь владельцем рассылки, если да, то разрешаем операцию
+        # Проверяем, является ли пользователь владельцем объекта, если да, то разрешаем операцию
         if self.model.objects.get(pk=self.kwargs.get('pk')).owner == self.request.user:
             return True
         # если не является, то следуем ограничениям прав permission_required

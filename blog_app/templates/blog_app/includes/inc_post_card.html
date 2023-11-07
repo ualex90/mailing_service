@@ -1,0 +1,19 @@
+{% load users_tags %}
+<div class="row mb-2">
+    <div class="col-md-12">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <h3 class="mb-0">{{ object.title|truncatechars:50 }}</h3>
+                <div class="mb-1 text-body-secondary">{{ object.created_at }}</div>
+                <p class="card-text mb-auto">{{ object.body|truncatechars:100 }}</p>
+                <a class="icon-link gap-1 icon-link-hover stretched-link"
+                   href="{% url 'blog_app:post' object.pk %}">Читать дальше</a>
+            </div>
+            <div class="col-4 d-none d-lg-block">
+                <img class="card-img-top"
+                     src="{{ object.image|mediapath }}"
+                     alt="Card image cap">
+            </div>
+        </div>
+    </div>
+</div>
