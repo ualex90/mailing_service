@@ -1,4 +1,66 @@
 {% extends 'main_app/base.html' %}
+
+{% load users_tags %}
 {% block content %}
 
+    <section class="py-5 container">
+        <div class="row py-lg-5">
+            <div class="col-lg-8 col-md-8 mx-auto">
+                <h1 class="fw-light text-center">Сервис рассылок HomeSys</h1>
+                <p class="lead text-body-secondary">Удобный сервис для вашего бизнеса.
+                    Вы никогда не забудете поздравить клиентов с праздниками, напомнить
+                    о проходящих акциях, новых поступлениях и т.д.
+                    Клиенты всегда будут вкурсе Ваших событий. </p>
+                <table class="table">
+                    <tr>
+                        <td>Зарегистрированных пользователей</td>
+                        <td>{{ user_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>Рассылок всего</td>
+                        <td>{{ mailing_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>Активных рассылок</td>
+                        <td>{{ mailing_active_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>Уникальных клиентов для рассылок</td>
+                        <td>{{ customer_count }}</td>
+                    </tr>
+                </table>
+                <p class="text-center">
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'users_app:register' %}" class="btn btn-primary my-2">Зарегистрироваться</a>
+                        <a href="{% url 'users_app:login' %}" class="btn btn-secondary my-2">Войти</a>
+                    {% else %}
+                        <a href="{% url 'service_app:list' %}" class="btn btn-primary my-2">Рассылки</a>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <a class="text-center" href="{% url 'blog_app:blog' %}">
+        <h3><i>Смотреть все записи блога</i></h3>
+    </a>
+    <div class="row mt-4">
+        {% for post in post_list %}
+            <div class="col-4">
+                <div class="card shadow">
+                    <div style="height: 300px;">
+                        <a class="p-1 h-auto d-inline-block" href="{% url 'blog_app:post' post.pk %}">
+                            <img class="card-img-top"
+                                 src="{{ post.image|mediapath }}"
+                                 alt="Card image cap">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><b>{{ post.title|truncatechars:29 }}</b></p>
+                        <p>{{ post.body|truncatechars:85 }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -49,8 +49,10 @@
         <div class="col-6 col-md">
             <h5>Навигация</h5>
             <ul class="list-unstyled text-small">
-                <li><a class="text-muted" href="#">Каталог товаров</a></li>
-                <li><a class="text-muted" href="#">Блог</a></li>
+                <li><a class="text-muted" href="{% url 'service_app:list' %}">Рассылки</a></li>
+                <li><a class="text-muted" href="{% url 'customers_app:list' %}">Клиенты</a></li>
+                <li><a class="text-muted" href="{% url 'logger_app:log' %}">Логи</a></li>
+                <li><a class="text-muted" href="{% url 'blog_app:blog' %}">Блог</a></li>
             </ul>
         </div>
         <div class="col-6 col-md">
