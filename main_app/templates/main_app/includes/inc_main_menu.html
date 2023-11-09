@@ -17,7 +17,7 @@
     {% endif %}
     {% if user.is_authenticated %}
         <a class="btn btn-sm btn-outline-secondary form-control mt-3" type="submit"
-           href="{% url 'service_app:index' %}">Список рассылок</a>
+           href="{% url 'service_app:list' %}">Список рассылок</a>
         <a class="btn btn-sm btn-outline-secondary form-control" type="submit"
            href="{% url 'service_app:message_list' %}">Сообщения</a>
         <a class="btn btn-sm btn-outline-secondary form-control" type="submit"

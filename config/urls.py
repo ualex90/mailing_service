@@ -19,10 +19,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('service_app.urls', namespace='service_app')),
+    path('', include('main_app.urls', namespace='main_app')),
+    path('service', include('service_app.urls', namespace='service_app')),
     path('customer/', include('customers_app.urls', namespace='customers_app')),
     path('log/', include('logger_app.urls', namespace='logger_app')),
     path('users/', include('users_app.urls', namespace='users_app')),

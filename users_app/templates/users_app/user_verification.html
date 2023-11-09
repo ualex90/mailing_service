@@ -1,4 +1,4 @@
-{% extends 'service_app/base.html' %}
+{% extends 'main_app/base.html' %}
 
 {% block content %}
     <div class="coll-12">
@@ -6,7 +6,7 @@
         {% if verify %}
             <div class="col-8"><a href="{% url 'users_app:login' %}">вход в систему</a></div>
         {% else %}
-            <div class="col-8"><a href="{% url 'service_app:index' %}">На главную</a></div>
+            <div class="col-8"><a href="{% url 'service_app:list' %}">На главную</a></div>
         {% endif %}
         {% if register_end %}
             <div class="col-8"><a href="{% url 'users_app:login' %}">Вход в систему</a></div>

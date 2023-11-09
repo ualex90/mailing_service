@@ -8,7 +8,7 @@ from service_app.views import MailingListView, MailingCreateView, MailingUpdateV
 app_name = ServiceAppConfig.name
 
 urlpatterns = [
-    path('', MailingListView.as_view(), name='index'),
+    path('', MailingListView.as_view(), name='list'),
     path('mailing/create/', MailingCreateView.as_view(), name='mailing_create'),
     path('mailing/update/<int:pk>/', MailingUpdateView.as_view(), name='mailing_update'),
     path('mailing/delete/<int:pk>/', MailingDeleteView.as_view(), name='mailing_delete'),

@@ -21,7 +21,6 @@ class UserHasPermissionMixin:
 class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     queryset = Mailing.objects.filter().order_by('pk').reverse()
-    template_name = 'service_app/index.html'
 
     extra_context = {
         'title': 'Рассылки',
@@ -53,7 +52,7 @@ class MessageListView(LoginRequiredMixin, ListView):
 
 class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
-    success_url = reverse_lazy('service_app:index')
+    success_url = reverse_lazy('service_app:list')
     form_class = MailingForm
     extra_context = {
         'title': 'Рассылки',
@@ -93,7 +92,7 @@ class MailingUpdateView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRe
     model = Mailing
     permission_required = 'service_app.change_mailing'
     form_class = MailingForm
-    success_url = reverse_lazy('service_app:index')
+    success_url = reverse_lazy('service_app:list')
     extra_context = {
         'title': 'Рассылки',
         'description': 'Изменение рассылки',
@@ -120,7 +119,7 @@ class MessageUpdateView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRe
 class MailingDeleteView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, DeleteView):
     model = Mailing
     permission_required = 'service_app.delete_mailing'
-    success_url = reverse_lazy('service_app:index')
+    success_url = reverse_lazy('service_app:list')
     extra_context = {
         'description': 'Удаление рассылки',
     }
@@ -160,7 +159,7 @@ def set_pause(request, pk):
 
         item.save()
 
-    return redirect(reverse('service_app:index'))
+    return redirect(reverse('service_app:list'))
 
 
 @login_required
@@ -172,7 +171,7 @@ def start_mailing(request, pk):
     # и рассылка активная
     if (item.owner == request.user or request.user.has_perms(['service_app.set_pause'])) and item.is_active:
         send_mailing(item, manual=True)
-    return redirect(reverse('service_app:index'))
+    return redirect(reverse('service_app:list'))
 
 
 @permission_required('service_app.set_active')
@@ -188,4 +187,4 @@ def set_active(request, pk):
 
     item.save()
 
-    return redirect(reverse('service_app:index'))
+    return redirect(reverse('service_app:list'))
