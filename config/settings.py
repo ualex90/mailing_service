@@ -26,7 +26,7 @@ load_dotenv()
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i7)pgxq==+ngyoju(=h+*dd1xyc*356@_^o5!0&f7fg8-i0f6e'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -89,9 +89,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mailing_service',
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'NAME': os.getenv('DJANGO_DB_NAME'),
+        'USER': os.getenv('DJANGO_DB_USER'),
+        'PASSWORD': os.getenv('DJANGO_DB_PASSWORD'),
     }
 }
 
@@ -145,11 +145,11 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = Path(BASE_DIR, 'media')
 
 # Email settings
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'noreply@oscarbot.ru'
-EMAIL_HOST_PASSWORD = 'AsTSNVv7pun9'
-EMAIL_USE_SSL = True
+EMAIL_HOST = os.getenv('DJANGO_EMAIL_HOST')
+EMAIL_PORT = os.getenv('DJANGO_EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('DJANGO_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('DJANGO_EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = os.getenv('DJANGO_EMAIL_USE_SSL') == 'True'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # CronTab settings (run: 'py manage.py crontab add')
@@ -164,4 +164,4 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/users/'
 
 # Cache settings
-CACHE_ENABLED = True
+CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
