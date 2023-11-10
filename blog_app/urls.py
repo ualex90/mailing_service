@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from blog_app.apps import BlogAppConfig
 from blog_app.views import PostCreateView, PostEditListView, PostListView, PostUpdateView, PostDetailView, \
@@ -7,7 +8,7 @@ from blog_app.views import PostCreateView, PostEditListView, PostListView, PostU
 app_name = BlogAppConfig.name
 
 urlpatterns = [
-    path('', PostListView.as_view(), name='blog'),
+    path('', cache_page(60)(PostListView.as_view()), name='blog'),
     path('edit_list/', PostEditListView.as_view(), name='edit_list'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post'),
     path('create/', PostCreateView.as_view(), name='create'),
