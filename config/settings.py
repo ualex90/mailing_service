@@ -162,3 +162,6 @@ AUTH_USER_MODEL = 'users_app.User'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/users/'
+
+# Cache settings
+CACHE_ENABLED = True
