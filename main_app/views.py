@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 
 from blog_app.models import Post
 from customers_app.models import Customer
+from main_app.models import Contact, Message
 from main_app.utils import get_random_list
 from service_app.models import Mailing
 from users_app.models import User
@@ -36,3 +37,26 @@ class IndexView(TemplateView):
         context_data['post_list'] = get_random_list(Post)
 
         return context_data
+
+
+class ContactView(TemplateView):
+    template_name = 'main_app/contact_view.html'
+    extra_context = {
+        'title': 'Контакты',
+        'description': 'Наши адреса',
+    }
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['object_list'] = Contact.objects.all()
+        return context_data
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        name = self.request.POST.get('name')
+        phone = self.request.POST.get('phone')
+        email = self.request.POST.get('email')
+        message = self.request.POST.get('message')
+        Message.objects.create(name=name, phone=phone, email=email, message=message)
+        return self.render_to_response(context)
+
