@@ -1,0 +1,41 @@
+{% extends 'main_app/base.html' %}
+{% load users_tags %}
+{% block content %}
+    <div class="row">
+        <div class="col-6">
+            <div class="mt-0">
+                <p class="card-text mb-auto">{{ object.body }}</p>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="mt-5">
+                        <input type="button" class="btn btn-outline-secondary form-control" onclick="history.back()"
+                               value="<< назад"/>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <p class="card-text mb-auto">Добавлено: {{ object.created_at }}</p>
+                <p class="card-text mb-auto">Пользователем {{ object.owner }}</p>
+            </div>
+            <div class="mt-3">
+                <p class="card-text mb-auto">Количество просмотров: {{ object.views_count }}</p>
+            </div>
+            <div class="mt-5">
+                {% if perms.blog_app.change_post %}
+                    <a type="button" class="btn btn-outline-primary"
+                       href="{% url 'blog_app:update' object.pk %}">Изменить</a>
+                {% endif %}
+                {% if perms.blog_app.delete_post %}
+                    <a type="button" class="btn btn-outline-danger"
+                       href="{% url 'blog_app:delete' object.pk %}">удалить</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-6">
+            <img class="card-img-top"
+                 src="{{ object.image|mediapath }}"
+                 alt="Card image cap">
+        </div>
+    </div>
+{% endblock %}

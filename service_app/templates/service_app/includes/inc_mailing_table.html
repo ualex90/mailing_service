@@ -12,13 +12,22 @@
     </thead>
     <tbody>
     {% for object in object_list %}
-        <tr {% if object.status == 'PA' %}
-            class="table-secondary"
+        <tr {% if object.is_active %}
+            {% if object.status == 'PA' %}
+                class="table-warning"
+            {% else %}
+                class="table-success"
+            {% endif %}
         {% else %}
-            class="table-success"
+                class="table-secondary"
         {% endif %}>
             <th scope="row">{{ object.pk }}</th>
-            <td>{{ object.name }}</td>
+            <td>
+                <p>{{ object.name|truncatechars:25 }}</p>
+                {% if user.is_staff %}
+                    <p>({{ object.owner }})</p>
+                {% endif %}
+            </td>
             <td>{{ object.get_periodic_display }}</td>
             <td>
                 <a href="{% url 'service_app:message_update' object.message.pk %}">
@@ -26,26 +35,48 @@
                 </a>
             </td>
             <td>{{ object.start_time }}</td>
-            <td>
+            <td>{% if object.is_active %}
                 <a href="{% url 'logger_app:mailing_log' object.pk %}">
                     {{ object.get_status_display }}
                 </a>
+            {% else %}
+                <a class="text-danger" href="{% url 'logger_app:mailing_log' object.pk %}">
+                    ОТКЛЮЧЕНО!
+                </a>
+            {% endif %}
             </td>
             <td>
                 <div>
-                    <a class="btn btn-primary"
-                       href="{% url 'service_app:start_mailing' object.pk %}">Go</a>
-                    {% if object.status == 'PA' %}
-                        <a class="btn btn-success"
-                           href="{% url 'service_app:toggle_activity' object.pk %}">Старт</a>
-                    {% else %}
-                        <a class="btn btn-secondary"
-                           href="{% url 'service_app:toggle_activity' object.pk %}">Пауза</a>
+                    {% if perms.service_app.set_active %}
+                        {% if object.is_active %}
+                            <a class="btn btn-warning"
+                               href="{% url 'service_app:set_active' object.pk %}">Выкл</a>
+                        {% else %}
+                            <a class="btn btn-success"
+                               href="{% url 'service_app:set_active' object.pk %}">Вкл</a>
+                        {% endif %}
                     {% endif %}
-                    <a class="btn btn-outline-primary"
-                       href="{% url 'service_app:mailing_update' object.pk %}">изменить</a>
-                    <a class="btn btn-outline-danger"
-                       href="{% url 'service_app:mailing_delete' object.pk %}">удалить</a>
+                    {% if object.owner == user or perms.service_app.start_mailing %}
+                        <a class="btn btn-primary"
+                           href="{% url 'service_app:start_mailing' object.pk %}">Go</a>
+                    {% endif %}
+                    {% if object.owner == user or perms.service_app.set_pause %}
+                        {% if object.status == 'PA' %}
+                            <a class="btn btn-success"
+                               href="{% url 'service_app:pause' object.pk %}">Старт</a>
+                        {% else %}
+                            <a class="btn btn-secondary"
+                               href="{% url 'service_app:pause' object.pk %}">Пауза</a>
+                        {% endif %}
+                    {% endif %}
+                    {% if object.owner == user or perms.service_app.change_mailing %}
+                        <a class="btn btn-outline-primary"
+                           href="{% url 'service_app:mailing_update' object.pk %}">Изменить</a>
+                    {% endif %}
+                    {% if object.owner == user or perms.service_app.delete_mailing %}
+                        <a class="btn btn-outline-danger"
+                           href="{% url 'service_app:mailing_delete' object.pk %}">Удалить</a>
+                    {% endif %}
                 </div>
             </td>
         </tr>

@@ -1,0 +1,64 @@
+{% extends 'main_app/base.html' %}
+{% block content %}
+    <div class="row">
+        {% for contact in object_list %}
+            <div class="col-9">
+                <div class="row">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td class="w-25">Страна</td>
+                                    <td>{{ contact.country }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25">ИНН</td>
+                                    <td>{{ contact.inn }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25">Адрес</td>
+                                    <td>{{ contact.address }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25">Телефон</td>
+                                    <td>{{ contact.phone }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-3">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header text-center">
+                    <h5><b>Свяжитесь с нами</b></h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" name="phone" class="form-control" id="phone"
+                                   placeholder="Контактный телефон">
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" name="email" class="form-control" id="email"
+                                   placeholder="email">
+                        </div>
+                        <div class="mb-3">
+                            <textarea type="text" name="message" class="form-control" id="message"
+                                      placeholder="Сообщение" required></textarea>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-outline-primary">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

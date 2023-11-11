@@ -17,7 +17,8 @@ def scheduled_send_mailing() -> None:
     for mailing in (Mailing.objects.
                     filter(start_time__lte=today).
                     exclude(status=Mailing.PAUSED).
-                    exclude(status=Mailing.COMPLETED)):
+                    exclude(status=Mailing.COMPLETED).
+                    exclude(is_active=False)):
 
         # Проверка на завершение рассылки. Если по времени окончена,
         # меняем статус на "Завершена" и идем к следующей рассылки

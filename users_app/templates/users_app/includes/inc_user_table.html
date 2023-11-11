@@ -1,0 +1,73 @@
+<table class="table table-secondary table-striped">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Email</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Суперпользователь</th>
+        <th scope="col">Персонал</th>
+        <th scope="col">Группы</th>
+        <th scope="col">Управление</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+        <tr{% if object.is_active %}
+            class="table-secondary"
+        {% else %}
+            class="table-danger"
+        {% endif %}>
+            <th scope="row">{{ object.pk }}</th>
+            <td>
+                <a href="{% url 'users_app:profile' object.pk %}">
+                    {{ object.email }}
+                </a>
+            </td>
+            <td>
+                {% if object.last_name %}
+                    {{ object.last_name }}
+                {% endif %}
+                {% if object.first_name %}
+                    {{ object.first_name }}
+                {% endif %}
+                {% if object.surname %}
+                    {{ object.surname }}
+                {% endif %}
+            </td>
+            <td>
+                {% if object.is_superuser %}
+                    Ok
+                {% endif %}
+            </td>
+            <td>
+                {% if object.is_staff %}
+                    Ok
+                {% endif %}
+            </td>
+            <td>
+                {% for group in object.groups.all %}
+                    <p>{{ group }}</p>
+                {% endfor %}
+            </td>
+            <td>
+                {% if perms.users_app.set_active and not object.is_superuser or user.is_superuser %}
+                    {% if object.is_active %}
+                        <a class="btn btn-warning"
+                           href="{% url 'users_app:set_active' object.pk %}">Заблокировать</a>
+                    {% else %}
+                        <a class="btn btn-success"
+                           href="{% url 'users_app:set_active' object.pk %}">Разблокировать</a>
+                    {% endif %}
+                {% endif %}
+                {% if perms.users_app.change_user %}
+                    <a class="btn btn-outline-primary"
+                       href="#">Изменить</a>
+                {% endif %}
+                {% if perms.users_app.delete_user %}
+                    <a class="btn btn-outline-danger"
+                       href="#">Удалить</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>

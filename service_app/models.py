@@ -9,6 +9,7 @@ NULLABLE = {'blank': True, 'null': True}
 class Message(models.Model):
     title = models.CharField(max_length=30, verbose_name='тема письма')
     body = models.TextField(verbose_name='тело письма')
+    owner = models.ForeignKey('users_app.User', **NULLABLE, on_delete=models.CASCADE, verbose_name='создал')
 
     def __str__(self):
         return self.title
@@ -62,6 +63,8 @@ class Mailing(models.Model):
     send_time = models.DateTimeField(**NULLABLE, verbose_name='последняя отправка')
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=CREATED, verbose_name='статус')
     customers = models.ManyToManyField('customers_app.Customer', verbose_name='клиенты')
+    owner = models.ForeignKey('users_app.User', **NULLABLE, on_delete=models.CASCADE, verbose_name='создал')
+    is_active = models.BooleanField(default=True, verbose_name='активна')
 
     def __str__(self):
         return f'{self.name} ({self.get_periodic_display()})'
@@ -69,3 +72,8 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = 'рассылку'
         verbose_name_plural = 'рассылки'
+        permissions = [
+            ('set_pause', 'Приостановка рассылки'),
+            ('start_mailing', 'Ручной запуск рассылки'),
+            ('set_active', 'Активировать рассылку'),
+        ]

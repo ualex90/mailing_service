@@ -1,8 +1,8 @@
-{% extends 'service_app/base.html' %}
+{% extends 'main_app/base.html' %}
 {% block content %}
     <div class="col-6 mb-5">
         <a class="btn btn-outline-primary"
-           href="{% url 'customers_app:create' %}">Добавить пользователя</a>
+           href="{% url 'customers_app:create' %}">Добавить клиента</a>
     </div>
     <div class="row">
         {% include 'customers_app/includes/inc_customer_table.html' %}

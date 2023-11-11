@@ -14,6 +14,9 @@
             <td>
                 <a href="{% url 'customers_app:detail' object.pk %}">
                     {{ object.last_name }} {{ object.first_name }} {{ object.surname }}
+                    {% if user.is_staff %}
+                        <p>({{ object.owner }})</p>
+                    {% endif %}
                 </a>
             </td>
             <td>{{ object.email }}</td>

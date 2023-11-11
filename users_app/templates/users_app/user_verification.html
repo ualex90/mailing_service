@@ -1,0 +1,15 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+    <div class="coll-12">
+        <div class="col-2"></div>
+        {% if verify %}
+            <div class="col-8"><a href="{% url 'users_app:login' %}">вход в систему</a></div>
+        {% else %}
+            <div class="col-8"><a href="{% url 'service_app:list' %}">На главную</a></div>
+        {% endif %}
+        {% if register_end %}
+            <div class="col-8"><a href="{% url 'users_app:login' %}">Вход в систему</a></div>
+        {% endif %}
+    </div>
+{% endblock %}

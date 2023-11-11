@@ -1,0 +1,24 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+
+    <div class="coll-12">
+        <form class="row" method="post" enctype="multipart/form-data">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Регистрация</h2>
+                    </div>
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
