@@ -1,1 +1,0 @@
-[{"model": "main_app.contact", "pk": 1, "fields": {"country": "Россия", "inn": "7707543124", "address": "Приморский край, г. Арсеньев", "phone": "+7 999 999 99 99"}}, {"model": "main_app.message", "pk": 1, "fields": {"name": "ALEKSEY UMNIKOV", "phone": "89999999999", "email": "u_alex90@mail.ru", "message": "Проверка сообщений"}}]
