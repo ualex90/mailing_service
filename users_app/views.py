@@ -8,7 +8,6 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView
 
 import users_app
-from service_app.views import UserHasPermissionMixin
 from users_app.forms import LoginForm, RegisterForm, UserProfileForm
 from users_app.models import User
 from users_app.utils import get_user_key, get_password
@@ -105,6 +104,7 @@ class PasswordRecoveryView(TemplateView):
 
 class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = User
+    paginate_by = 10
     queryset = model.objects.filter().order_by('pk').reverse()
     permission_required = 'users_app.view_user'
     extra_context = {

@@ -9,6 +9,7 @@ from service_app.views import UserHasPermissionMixin
 
 class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
+    paginate_by = 10
     queryset = Customer.objects.filter().order_by('pk').reverse()
     extra_context = {
         'title': 'Клиенты',
