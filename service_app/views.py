@@ -20,6 +20,7 @@ class UserHasPermissionMixin:
 
 class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
+    paginate_by = 10
     queryset = Mailing.objects.filter().order_by('pk').reverse()
 
     extra_context = {
@@ -36,6 +37,7 @@ class MailingListView(LoginRequiredMixin, ListView):
 
 class MessageListView(LoginRequiredMixin, ListView):
     model = Message
+    paginate_by = 10
     queryset = Message.objects.filter().order_by('pk').reverse()
 
     extra_context = {

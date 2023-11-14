@@ -10,6 +10,7 @@ from blog_app.models import Post
 
 class PostListView(ListView):
     model = Post
+    paginate_by = 5
     queryset = Post.objects.filter().order_by('pk').reverse()
     extra_context = {
         'title': 'Блог',
@@ -19,6 +20,7 @@ class PostListView(ListView):
 
 class PostEditListView(LoginRequiredMixin, ListView):
     model = Post
+    paginate_by = 10
     queryset = Post.objects.filter().order_by('pk')
     template_name = 'blog_app/post_edit_list.html'
     extra_context = {
