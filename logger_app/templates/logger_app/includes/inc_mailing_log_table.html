@@ -10,7 +10,9 @@
     </tr>
     </thead>
     <tbody>
-    {% for object in object_list %}
+
+    {# Для постраничной пагинации в FBV и TemplateView используется объект page_obj вместо object #}
+    {% for object in page_obj %}
         <tr {% if object.is_successfully %}
             class="table-secondary"
         {% else %}
